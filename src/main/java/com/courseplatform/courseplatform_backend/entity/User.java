@@ -34,7 +34,7 @@ public class User {
     private Role role;
 
     @OneToMany(
-            mappedBy = "user",
+            mappedBy =  "user",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
