@@ -1,52 +1,29 @@
 package com.courseplatform.courseplatform_backend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Student name cannot be empty")
     private String name;
+
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Invalid email format")
     private String email;
+
+    @NotBlank(message = "Course cannot be empty")
     private String course;
-
-    public Student() {
-    }
-
-    public Student(String name, String email, String course) {
-        this.name = name;
-        this.email = email;
-        this.course = course;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCourse() {
-        return course;
-    }
-
-    public void setCourse(String course) {
-        this.course = course;
-    }
 }

@@ -2,13 +2,14 @@ package com.courseplatform.courseplatform_backend.controller;
 
 import com.courseplatform.courseplatform_backend.entity.Student;
 import com.courseplatform.courseplatform_backend.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/students")
+@RequestMapping("/student")
 public class StudentController {
 
     @Autowired
@@ -28,7 +29,7 @@ public class StudentController {
 
     @PostMapping
     public Student addStudent(
-            @RequestBody Student student) {
+           @Valid @RequestBody Student student) {
 
         return service.addStudent(student);
     }
@@ -36,6 +37,7 @@ public class StudentController {
     @PutMapping("/{id}")
     public Student updateStudent(
             @PathVariable Long id,
+            @Valid
             @RequestBody Student student) {
 
         return service.updateStudent(id, student);
