@@ -2,6 +2,7 @@ package com.courseplatform.courseplatform_backend.service;
 import com.courseplatform.courseplatform_backend.entity.Course;
 import com.courseplatform.courseplatform_backend.exception.ResourceNotFoundException;
 import com.courseplatform.courseplatform_backend.repository.CourseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 @Service
 public class CourseService {
 
+    @Autowired
     private final CourseRepository repository;
 
     public CourseService(CourseRepository repository) {

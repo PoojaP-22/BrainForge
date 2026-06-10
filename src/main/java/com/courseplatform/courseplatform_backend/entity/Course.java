@@ -1,6 +1,8 @@
 package com.courseplatform.courseplatform_backend.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 @Entity
 public class Course {

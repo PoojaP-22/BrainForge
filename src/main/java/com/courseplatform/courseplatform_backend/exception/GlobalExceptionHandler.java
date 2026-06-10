@@ -72,4 +72,46 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST
         );
     }
+
+    @ExceptionHandler(
+            DuplicateResourceException.class)
+    public ResponseEntity<ErrorResponse>
+    handleDuplicateResource(
+            DuplicateResourceException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse error =
+                new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.CONFLICT.value(),
+                        "CONFLICT",
+                        ex.getMessage(),
+                        request.getRequestURI()
+                );
+
+        return new ResponseEntity<>(
+                error,
+                HttpStatus.CONFLICT
+        );
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGlobalException(
+            Exception ex,
+            HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "INTERNAL SERVER ERROR",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return new ResponseEntity<>(
+                error,
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
+
 }
