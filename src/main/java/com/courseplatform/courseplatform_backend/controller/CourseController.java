@@ -1,7 +1,11 @@
 package com.courseplatform.courseplatform_backend.controller;
 
+import com.courseplatform.courseplatform_backend.dto.course.CourseRequestDTO;
+import com.courseplatform.courseplatform_backend.dto.course.CourseResponseDTO;
 import com.courseplatform.courseplatform_backend.entity.Course;
 import com.courseplatform.courseplatform_backend.service.CourseService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,31 +14,36 @@ import java.util.List;
 @RequestMapping("/courses")
 public class CourseController {
 
-    private final CourseService service;
-
-    public CourseController(CourseService service) {
-        this.service = service;
-    }
+    @Autowired
+    private CourseService service;
 
     @GetMapping
-    public List<Course> getAllCourses() {
+    public List<CourseResponseDTO> getAllCourses() {
         return service.getAllCourses();
     }
 
     @GetMapping("/{id}")
-    public Course getCourse(@PathVariable Long id) {
+    public CourseResponseDTO getCourse(
+            @PathVariable Long id) {
+
         return service.getCourseById(id);
     }
 
     @PostMapping
-    public Course addCourse(@RequestBody Course course) {
-        return service.addCourse(course);
+    public CourseResponseDTO addCourse(
+            @Valid
+            @RequestBody CourseRequestDTO dto) {
+
+        return service.addCourse(dto);
     }
 
     @PutMapping("/{id}")
-    public Course updateCourse(@PathVariable Long id,
-                               @RequestBody Course course) {
-        return service.updateCourse(id, course);
+    public CourseResponseDTO updateCourse(
+            @PathVariable Long id,
+            @Valid
+            @RequestBody CourseRequestDTO dto) {
+
+        return service.updateCourse(id, dto);
     }
 
     @DeleteMapping("/{id}")
