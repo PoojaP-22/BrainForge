@@ -1,4 +1,6 @@
 package com.courseplatform.courseplatform_backend.service;
+import com.courseplatform.courseplatform_backend.dto.course.CourseRequestDTO;
+import com.courseplatform.courseplatform_backend.dto.course.CourseResponseDTO;
 import com.courseplatform.courseplatform_backend.entity.Course;
 import com.courseplatform.courseplatform_backend.exception.ResourceNotFoundException;
 import com.courseplatform.courseplatform_backend.repository.CourseRepository;
@@ -9,49 +11,67 @@ import java.util.List;
 
 @Service
 public class CourseService {
-
     @Autowired
-    private final CourseRepository repository;
+    private CourseRepository repository;
 
-    public CourseService(CourseRepository repository) {
+    public List<CourseResponseDTO> getAllCourses() {
 
-        this.repository = repository;
+        return repository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
-    public List<Course> getAllCourses() {
+    public CourseResponseDTO getCourseById(Long id) {
 
-        return repository.findAll();
+        Course course =
+                repository.findById(id)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Course",
+                                        "id",
+                                        id
+                                ));
+
+        return convertToDTO(course);
     }
 
-    public Course getCourseById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                            "Course",
-                            "id",
-                            id
-        ));
+    public CourseResponseDTO addCourse(CourseRequestDTO dto) {
+
+        Course course = new Course();
+
+        course.setTitle(dto.getTitle());
+        course.setDescription(dto.getDescription());
+        course.setPrice(dto.getPrice());
+        course.setInstructor(dto.getInstructor());
+
+        Course savedCourse =
+                repository.save(course);
+
+        return convertToDTO(savedCourse);
     }
 
-    public Course addCourse(Course course) {
+    public CourseResponseDTO updateCourse(
+            Long id,
+            CourseRequestDTO dto) {
 
-        return repository.save(course);
-    }
+        Course existing =
+                repository.findById(id)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Course",
+                                        "id",
+                                        id
+                                ));
 
-    public Course updateCourse(Long id, Course course) {
-        Course existing = repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Course",
-                                "id",
-                                id
-                        ));
-            existing.setTitle(course.getTitle());
-            existing.setInstructor(course.getInstructor());
-            existing.setPrice(course.getPrice());
+        existing.setTitle(dto.getTitle());
+        existing.setDescription(dto.getDescription());
+        existing.setPrice(dto.getPrice());
+        existing.setInstructor(dto.getInstructor());
 
-            return repository.save(existing);
+        Course updated = repository.save(existing);
 
+        return convertToDTO(updated);
     }
 
     public void deleteCourse(Long id) {
@@ -65,5 +85,16 @@ public class CourseService {
                         ));
 
         repository.delete(existing);
+    }
+
+    private CourseResponseDTO convertToDTO(Course course) {
+
+        return new CourseResponseDTO(
+                course.getId(),
+                course.getTitle(),
+                course.getDescription(),
+                course.getInstructor(),
+                course.getPrice()
+        );
     }
 }

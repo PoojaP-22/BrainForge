@@ -9,34 +9,34 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class Course {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String title;
+    private String name;
 
-    @Column(length = 1000)
-    private String description;
-
-    @Column(nullable = false)
-    private String instructor;
-
-    @Column(nullable = false)
-    private Double price;
+    @Column(nullable = false, unique = true)
+    private String email;
 
     @JsonIgnore
+    @Column(nullable = false)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @OneToMany(
-            mappedBy = "course",
+            mappedBy = "user",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private List<Enrollment> enrollments = new ArrayList<>();
-
 }
